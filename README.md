@@ -117,43 +117,43 @@ mura_resnet18.pth	Trained model weights
 training_results.png	Accuracy & Loss plots
 ## 📘 Dataset Loading, Preprocessing, and Model Training
 - ### 1. Dataset Loading
-- The MURA dataset is automatically downloaded using KaggleHub. The dataset contains X-ray images from multiple body parts (Elbow, Finger, Hand, etc.) and is organized into Normal and Abnormal folders. The script recursively loads all images, reads associated labels, and prepares them for PyTorch data loaders.
+  - The MURA dataset is automatically downloaded using KaggleHub. The dataset contains X-ray images from multiple body parts (Elbow, Finger, Hand, etc.) and is organized into Normal and Abnormal folders. The script recursively loads all images, reads associated labels, and prepares them for PyTorch data loaders.
 
 - ### 2. Preprocessing
-- Each image passes through the following preprocessing pipeline:
+  - Each image passes through the following preprocessing pipeline:
 
-- Convert to grayscale / RGB format as needed
+  - Convert to grayscale / RGB format as needed
 
-- Resize to 224 × 224 (ResNet input size)
+  - Resize to 224 × 224 (ResNet input size)
 
-- Normalize using ImageNet mean and standard deviation
+  - Normalize using ImageNet mean and standard deviation
 
-- Apply transformations:
+  - Apply transformations:
 
-- Random horizontal flips
+  - Random horizontal flips
 
-- Random rotations
+  - Random rotations
 
-- Tensor conversion
+  - Tensor conversion
 
-- This helps improve generalization and reduces overfitting.
+  - This helps improve generalization and reduces overfitting.
 
 - ### 3. Model Training
-- A ResNet-18 model is modified for binary classification:
+  - A ResNet-18 model is modified for binary classification:
 
-- Final fully connected layer replaced with a 2-unit output layer
+  - Final fully connected layer replaced with a 2-unit output layer
 
-- Loss function: Cross-Entropy Loss
+  - Loss function: Cross-Entropy Loss
 
-- Optimizer: Adam
+  - Optimizer: Adam
 
-- Metrics: Accuracy & Loss tracked for both training and validation
+  - Metrics: Accuracy & Loss tracked for both training and validation
 
-- The model trains for multiple epochs, and:
+  - The model trains for multiple epochs, and:
 
-- Best weights are saved as mura_resnet18.pth
+  - Best weights are saved as mura_resnet18.pth
 
-- Performance plots are stored in training_results.png
+  - Performance plots are stored in training_results.png
 
 ## 🏗️ Model Architecture
 
