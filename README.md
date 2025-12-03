@@ -26,10 +26,10 @@ MURA_X-Ray_Abnormality_Detector/
 ## 📸 Project Preview
 
 ### ✨ Web App Interface  
-![App Screenshot](images/Screenshot 1.png)
+![App Screenshot](images/Screenshot_1.png)
 
 ### 📊 Training Curve  
-![Training Results](images/training_results.png)
+![Training Results](training_results1.png)
 
 ### File Descriptions:
 - **`backend_train.py`**  
