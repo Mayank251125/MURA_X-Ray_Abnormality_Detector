@@ -1,0 +1,14 @@
+# Ignore the dataset folder
+MURA-v1.1/
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
+
+# Ignore virtual environments (if you made one)
+venv/
+env/
+.env
+
+# Ignore large model files (Optional - remove this line if you WANT to upload the .pth file)
+# mura_resnet18.pth
