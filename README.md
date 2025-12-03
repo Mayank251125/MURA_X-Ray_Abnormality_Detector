@@ -64,14 +64,17 @@ text
 ```bash
 git clone https://github.com/Mayank251125/MURA_X-Ray_Abnormality_Detector
 cd MURA_X-Ray_Abnormality_Detector
-2. Install Dependencies
-bash
+```
+### 2. Install Dependencies
+```bash
 pip install -r requirements.txt
-🛠️ Training the Model
+```
+## 🛠️ Training the Model
 If you do not already have mura_resnet18.pth, run the backend training script:
 
-bash
+```bash
 python backend_train.py
+```
 This process will:
 
 Download the MURA dataset automatically
@@ -84,11 +87,12 @@ Save the trained model (mura_resnet18.pth)
 
 Generate training graphs (training_results.png)
 
-▶️ Running the Frontend App
+## ▶️ Running the Frontend App
 Once the model is trained, start the Streamlit app:
 
-bash
+```bash
 streamlit run frontend_app.py
+```
 You can now:
 
 Upload X-ray images
@@ -97,15 +101,15 @@ View predictions
 
 See confidence scores
 
-📊 Output Files
+## 📊 Output Files
 File	Description
 mura_resnet18.pth	Trained model weights
 training_results.png	Accuracy & Loss plots
-📘 Dataset Loading, Preprocessing, and Model Training
-1. Dataset Loading
+## 📘 Dataset Loading, Preprocessing, and Model Training
+### 1. Dataset Loading
 The MURA dataset is automatically downloaded using KaggleHub. The dataset contains X-ray images from multiple body parts (Elbow, Finger, Hand, etc.) and is organized into Normal and Abnormal folders. The script recursively loads all images, reads associated labels, and prepares them for PyTorch data loaders.
 
-2. Preprocessing
+### 2. Preprocessing
 Each image passes through the following preprocessing pipeline:
 
 Convert to grayscale / RGB format as needed
@@ -124,7 +128,7 @@ Tensor conversion
 
 This helps improve generalization and reduces overfitting.
 
-3. Model Training
+### 3. Model Training
 A ResNet-18 model is modified for binary classification:
 
 Final fully connected layer replaced with a 2-unit output layer
@@ -150,7 +154,7 @@ ResNet-18 Architecture:
 - Average pooling
 - Fully connected layer (512 → 2 outputs)
 - Output: Normal vs Abnormal probability
-📈 Performance Metrics
+## 📈 Performance Metrics
 The trained model achieves:
 
 Training Accuracy: ~85-90%
@@ -159,7 +163,7 @@ Validation Accuracy: ~80-85%
 
 Loss: Cross-entropy loss converges steadily
 
-🔧 Customization
+## 🔧 Customization
 You can modify the following parameters in backend_train.py:
 
 BATCH_SIZE: Batch size for training (default: 32)
@@ -170,7 +174,7 @@ LEARNING_RATE: Learning rate for optimizer (default: 0.001)
 
 IMAGE_SIZE: Input image dimensions (default: 224)
 
-🐛 Troubleshooting
+## 🐛 Troubleshooting
 KaggleHub download issues: Ensure you have a stable internet connection and Kaggle API setup if needed.
 
 CUDA out of memory: Reduce BATCH_SIZE in backend_train.py.
