@@ -13,6 +13,7 @@ Try the deployed app here:
 ---
 
 ## 📁 Project Structure
+
 MURA_X-Ray_Abnormality_Detector/
 ├── backend_train.py # Training script for ResNet-18 model
 ├── frontend_app.py # Streamlit web interface
@@ -21,7 +22,14 @@ MURA_X-Ray_Abnormality_Detector/
 ├── training_results.png # Accuracy and loss plots (generated after training)
 └── README.md # Project documentation
 
-text
+
+## 📸 Project Preview
+
+### ✨ Web App Interface  
+![App Screenshot](images/Screenshot 1.png)
+
+### 📊 Training Curve  
+![Training Results](images/training_results.png)
 
 ### File Descriptions:
 - **`backend_train.py`**  
