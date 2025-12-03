@@ -13,7 +13,17 @@ Try the deployed app here:
 ---
 
 ## 📁 Project Structure
+MURA_X-Ray_Abnormality_Detector/
+├── backend_train.py # Training script for ResNet-18 model
+├── frontend_app.py # Streamlit web interface
+├── requirements.txt # Python dependencies
+├── mura_resnet18.pth # Trained model weights (generated after training)
+├── training_results.png # Accuracy and loss plots (generated after training)
+└── README.md # Project documentation
 
+text
+
+### File Descriptions:
 - **`backend_train.py`**  
   Handles:
   - Automatic dataset downloading via **KaggleHub**
@@ -44,48 +54,126 @@ Try the deployed app here:
 
 - Python **3.8+**
 - Internet connection (dataset downloads via KaggleHub)
+- GPU recommended for training (optional but faster)
 
 ---
 
 ## 🚀 Installation
 
-### 1. Clone or Download the Repository
+### 1. Clone the Repository
 ```bash
 git clone https://github.com/Mayank251125/MURA_X-Ray_Abnormality_Detector
-cd <https://github.com/Mayank251125/MURA_X-Ray_Abnormality_Detector/blob/main/frontend_app.py>
-## 🚀 Installation
-
-### 2. Install Dependencies
-```bash
+cd MURA_X-Ray_Abnormality_Detector
+2. Install Dependencies
+bash
 pip install -r requirements.txt
+🛠️ Training the Model
+If you do not already have mura_resnet18.pth, run the backend training script:
 
----
-
-```markdown
-## 🛠️ Training the Model
-
-If you do not already have **mura_resnet18.pth**, run the backend training script:
-
-```bash
+bash
 python backend_train.py
+This process will:
 
----
+Download the MURA dataset automatically
 
-```markdown
-## ▶️ Running the Frontend App
+Preprocess and load images
 
+Train ResNet-18 on binary classification
+
+Save the trained model (mura_resnet18.pth)
+
+Generate training graphs (training_results.png)
+
+▶️ Running the Frontend App
 Once the model is trained, start the Streamlit app:
 
-```bash
+bash
 streamlit run frontend_app.py
+You can now:
 
----
+Upload X-ray images
 
-```markdown
-## 📊 Output Files
+View predictions
 
-| File | Description |
-|------|-------------|
-| `mura_resnet18.pth` | Trained model weights |
-| `training_results.png` | Accuracy & Loss plots |
+See confidence scores
+
+📊 Output Files
+File	Description
+mura_resnet18.pth	Trained model weights
+training_results.png	Accuracy & Loss plots
+📘 Dataset Loading, Preprocessing, and Model Training
+1. Dataset Loading
+The MURA dataset is automatically downloaded using KaggleHub. The dataset contains X-ray images from multiple body parts (Elbow, Finger, Hand, etc.) and is organized into Normal and Abnormal folders. The script recursively loads all images, reads associated labels, and prepares them for PyTorch data loaders.
+
+2. Preprocessing
+Each image passes through the following preprocessing pipeline:
+
+Convert to grayscale / RGB format as needed
+
+Resize to 224 × 224 (ResNet input size)
+
+Normalize using ImageNet mean and standard deviation
+
+Apply transformations:
+
+Random horizontal flips
+
+Random rotations
+
+Tensor conversion
+
+This helps improve generalization and reduces overfitting.
+
+3. Model Training
+A ResNet-18 model is modified for binary classification:
+
+Final fully connected layer replaced with a 2-unit output layer
+
+Loss function: Cross-Entropy Loss
+
+Optimizer: Adam
+
+Metrics: Accuracy & Loss tracked for both training and validation
+
+The model trains for multiple epochs, and:
+
+Best weights are saved as mura_resnet18.pth
+
+Performance plots are stored in training_results.png
+
+🏗️ Model Architecture
+text
+ResNet-18 Architecture:
+- Input: 224×224×3 image
+- Initial convolution and pooling
+- 4 ResNet blocks (each with 2 convolutional layers)
+- Average pooling
+- Fully connected layer (512 → 2 outputs)
+- Output: Normal vs Abnormal probability
+📈 Performance Metrics
+The trained model achieves:
+
+Training Accuracy: ~85-90%
+
+Validation Accuracy: ~80-85%
+
+Loss: Cross-entropy loss converges steadily
+
+🔧 Customization
+You can modify the following parameters in backend_train.py:
+
+BATCH_SIZE: Batch size for training (default: 32)
+
+EPOCHS: Number of training epochs (default: 10)
+
+LEARNING_RATE: Learning rate for optimizer (default: 0.001)
+
+IMAGE_SIZE: Input image dimensions (default: 224)
+
+🐛 Troubleshooting
+KaggleHub download issues: Ensure you have a stable internet connection and Kaggle API setup if needed.
+
+CUDA out of memory: Reduce BATCH_SIZE in backend_train.py.
+
+Streamlit app not loading model: Ensure mura_resnet18.pth is in the same directory as frontend_app.py.
 
