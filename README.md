@@ -27,7 +27,7 @@ MURA_X-Ray_Abnormality_Detector/
 ## 📸 Project Preview
 
 ### ✨ Web App Interface  
-![App Screenshot](images/Screenshot_1.png)
+![App Screenshot](Images/Screenshot_1.png)
 
 
 ### 📊 Training Curve  
