@@ -1,45 +1,91 @@
-# MURA X-Ray Abnormality Detector 🩻
+# 🩻 MURA X-Ray Abnormality Detector
 
-This repository contains a Deep Learning project designed to detect abnormalities in musculoskeletal X-ray images. It utilizes the **MURA (Musculoskeletal RAdiographs)** dataset and a **ResNet-18** Convolutional Neural Network (CNN) to classify images as either **Normal** or **Abnormal**.
+A Deep Learning-based project for detecting abnormalities in musculoskeletal X-ray images using the **MURA (Musculoskeletal RAdiographs)** dataset and a **ResNet-18** Convolutional Neural Network (CNN).  
+The system classifies images as **Normal** or **Abnormal**, and provides a Streamlit-based UI for easy interaction.
 
-The project consists of a training backend script and a Streamlit-based frontend application for easy interaction.
+---
 
-## 📂 Project Structure
+## 🌐 Live Demo
 
-* **`backend_train.py`**: The core training script. It handles:
-    * Automatic dataset downloading via `kagglehub`.
-    * Data preprocessing and loading (MURA dataset structure).
-    * Model definition (ResNet-18 binary classifier).
-    * Training loop with validation.
-    * Saving the trained model (`mura_resnet18.pth`) and plotting training results (`training_results.png`).
-* **`frontend_app.py`**: A user-friendly web interface built with **Streamlit**. It allows users to:
-    * Upload X-ray images (PNG, JPG, JPEG).
-    * View the uploaded image.
-    * Get real-time predictions (Normal/Abnormal) with confidence scores.
-* **`requirements.txt`**: List of Python dependencies required to run the project.
-* **`mura_resnet18.pth`**: (Generated after training) The saved model weights.
-* **`training_results.png`**: (Generated after training) plots showing Accuracy and Loss over epochs.
+Try the deployed app here:  
+👉 **https://murax-rayabnormalitydetector-gfwpuvcgyeccknfbfgjunf.streamlit.app/**
+
+---
+
+## 📁 Project Structure
+
+- **`backend_train.py`**  
+  Handles:
+  - Automatic dataset downloading via **KaggleHub**
+  - Data preprocessing and loading
+  - ResNet-18 model definition (binary classifier)
+  - Training loop & validation
+  - Saving model weights (`mura_resnet18.pth`)
+  - Generating training curves (`training_results.png`)
+
+- **`frontend_app.py`**  
+  A web UI built with **Streamlit**, allowing users to:
+  - Upload X-ray images (PNG, JPG, JPEG)
+  - Preview uploaded images
+  - Receive predictions (Normal / Abnormal) with confidence scores
+
+- **`requirements.txt`**  
+  All Python dependencies for training and running the app.
+
+- **`mura_resnet18.pth`**  
+  Trained model weights (generated after training).
+
+- **`training_results.png`**  
+  Accuracy and loss plots (generated after training).
+
+---
 
 ## ⚙️ Prerequisites
 
-* Python 3.8+
-* Internet connection (for downloading the dataset via KaggleHub)
+- Python **3.8+**
+- Internet connection (dataset downloads via KaggleHub)
+
+---
 
 ## 🚀 Installation
 
-1.  **Clone the repository** (if applicable) or download the files to your local machine.
+### 1. Clone or Download the Repository
+```bash
+git clone https://github.com/Mayank251125/MURA_X-Ray_Abnormality_Detector
+cd <https://github.com/Mayank251125/MURA_X-Ray_Abnormality_Detector/blob/main/frontend_app.py>
+## 🚀 Installation
 
-2.  **Install Dependencies**:
-    Run the following command to install the required libraries:
-    ```bash
-    pip install -r requirements.txt
-    ```
+### 2. Install Dependencies
+```bash
+pip install -r requirements.txt
 
-## 🛠️ Usage
+---
 
-### 1. Training the Model
-Before running the app, you need to train the model or ensure you have the `mura_resnet18.pth` file.
+```markdown
+## 🛠️ Training the Model
 
-Run the backend script:
+If you do not already have **mura_resnet18.pth**, run the backend training script:
+
 ```bash
 python backend_train.py
+
+---
+
+```markdown
+## ▶️ Running the Frontend App
+
+Once the model is trained, start the Streamlit app:
+
+```bash
+streamlit run frontend_app.py
+
+---
+
+```markdown
+## 📊 Output Files
+
+| File | Description |
+|------|-------------|
+| `mura_resnet18.pth` | Trained model weights |
+| `training_results.png` | Accuracy & Loss plots |
+
