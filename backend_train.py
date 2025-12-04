@@ -245,8 +245,29 @@ def train_model():
 
         history['train_loss'].append(avg_loss)
         
-        print(f"Epoch {epoch+1}: Train Acc={train_acc:.4f}, Val Acc={val_acc:.4f}")
+        model.eval()  # Set model to evaluation mode
+        val_correct = 0
+        val_total = 0
+        
+        with torch.no_grad(): # Don't calculate gradients for validation
+            for images, labels in valid_loader:
+                images, labels = images.to(DEVICE), labels.to(DEVICE)
+                labels = labels.unsqueeze(1)
+                
+                outputs = model(images)
+                
+                # Calculate Accuracy
+                probs = torch.sigmoid(outputs)
+                preds = (probs > 0.5).float()
+                val_correct += (preds == labels).sum().item()
+                val_total += labels.size(0)
+        
+        val_acc = val_correct / val_total
+        history['val_acc'].append(val_acc)
+        # ==========================================
 
+        # NOW this line will work because val_acc is defined:
+        print(f"Epoch {epoch+1}: Train Acc={train_acc:.4f}, Val Acc={val_acc:.4f}")
     # Save Model
     torch.save(model.state_dict(), MODEL_SAVE_PATH)
     print(f"\n[Backend] Model saved to {MODEL_SAVE_PATH}")
