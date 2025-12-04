@@ -245,6 +245,7 @@ def train_model():
 
         history['train_loss'].append(avg_loss)
         
+        print(f"Epoch {epoch+1}: Train Acc={train_acc:.4f}, Val Acc={val_acc:.4f}")
 
     # Save Model
     torch.save(model.state_dict(), MODEL_SAVE_PATH)
