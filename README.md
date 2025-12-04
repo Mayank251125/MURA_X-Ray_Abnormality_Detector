@@ -41,7 +41,7 @@ MURA_X-Ray_Abnormality_Detector/
   - ResNet-18 model definition (binary classifier)
   - Training loop & validation
   - Saving model weights (`mura_resnet18.pth`)
-  - Generating training curves (`training_results.png`)
+  - Generating training curves (`training_results1.png`)
 
 - **`frontend_app.py`**  
   A web UI built with **Streamlit**, allowing users to:
@@ -95,7 +95,14 @@ python backend_train.py
 
 - Save the trained model (mura_resnet18.pth)
 
-- Generate training graphs (training_results.png)
+- Generate training graphs (training_results1.png)
+
+- Training Images:
+    (training_results1.png)
+    (Model Training Images/Screenshot 2025-12-03 204031.png)
+    (Model Training Images/Screenshot 2025-12-03 204052.png)
+    (Model Training Images/Screenshot 2025-12-03 204146.png)
+
 
 ## ▶️ Running the Frontend App
 Once the model is trained, start the Streamlit app:
@@ -114,7 +121,7 @@ streamlit run frontend_app.py
 ## 📊 Output Files
 - File	Description
 mura_resnet18.pth	Trained model weights
-training_results.png	Accuracy & Loss plots
+training_results1.png	Accuracy & Loss plots
 ## 📘 Dataset Loading, Preprocessing, and Model Training
 - ### 1. Dataset Loading
   - The MURA dataset is automatically downloaded using KaggleHub. The dataset contains X-ray images from multiple body parts (Elbow, Finger, Hand, etc.) and is organized into Normal and Abnormal folders. The script recursively loads all images, reads associated labels, and prepares them for PyTorch data loaders.
