@@ -98,7 +98,7 @@ python backend_train.py
 - Generate training graphs (training_results1.png)
 
 - Training Images:
-    (training_results1.png)
+    ![Training Results](training_results1.png)
     (Model Training Images/Screenshot 2025-12-03 204031.png)
     (Model Training Images/Screenshot 2025-12-03 204052.png)
     (Model Training Images/Screenshot 2025-12-03 204146.png)
