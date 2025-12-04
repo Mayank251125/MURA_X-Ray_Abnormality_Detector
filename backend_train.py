@@ -122,141 +122,129 @@ class MuraDataset(Dataset):
 # 4. Training Function
 
 def train_model():
+
     print(f"[Backend] Using device: {DEVICE}")
-    
-    # Define transformations for the images
-    # 1. Resize to 224x224 (Standard for ResNet)
-    # 2. Convert to PyTorch Tensor
-    # 3. Normalize using ImageNet statistics
+
+   
 
     transform = transforms.Compose([
+
         transforms.Resize((224, 224)),
+
         transforms.ToTensor(),
+
         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+
     ])
-    
+
+   
+
     try:
-        # Initialize Custom Datasets for Training and Validation
 
         train_dataset = MuraDataset(DATA_DIR, split='train', transform=transform)
+
         valid_dataset = MuraDataset(DATA_DIR, split='valid', transform=transform)
-        
-        # Check if data exists
+
+       
 
         if len(train_dataset) == 0:
+
             print("[Error] No training data found. Check the download path.")
+
             return
 
-        # Create DataLoaders to handle batching and shuffling
+
 
         train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
+
         valid_loader = DataLoader(valid_dataset, batch_size=BATCH_SIZE, shuffle=False)
+
     except Exception as e:
+
         print(f"[Error] Failed to create DataLoaders: {e}")
+
         return
 
-    # Load the Model and push to GPU/CPU
+
 
     model = get_model().to(DEVICE)
-    
-    # Define Loss Function (Binary Cross Entropy for 2 classes)
 
     criterion = nn.BCEWithLogitsLoss()
-    
-    # Define Optimizer (Adam is generally faster/better than SGD for this)
 
     optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
 
-    # Dictionary to store accuracy/loss for plotting later
+
 
     history = {'train_acc': [], 'val_acc': [], 'train_loss': [], 'val_loss': []}
 
+
+
     print(f"\n[Backend] Starting training for {NUM_EPOCHS} epochs...")
-    
-    #MAIN TRAINING LOOP 
+
+   
 
     for epoch in range(NUM_EPOCHS):
-        model.train() # Set model to training mode (enables Dropouts/BatchNorm)
+
+        model.train()
+
         running_loss = 0.0
+
         correct_preds = 0
+
         total_preds = 0
-        
-        # Progress bar for the current epoch
+
+       
 
         loop = tqdm(train_loader, desc=f"Epoch {epoch+1}/{NUM_EPOCHS} [Train]")
-        
+
+       
+
         for images, labels in loop:
-            # Move data to the active device (GPU or CPU)
 
             images, labels = images.to(DEVICE), labels.to(DEVICE)
-            labels = labels.unsqueeze(1) # Reshape labels to match output shape
-            
-            # 1. Clear previous gradients
+
+            labels = labels.unsqueeze(1)
+
+           
 
             optimizer.zero_grad()
-            
-            # 2. Forward Pass (Make prediction)
 
             outputs = model(images)
-            
-            # 3. Calculate Loss (Compare prediction vs truth)
 
             loss = criterion(outputs, labels)
-            
-            # 4. Backward Pass (Calculate gradients)
 
             loss.backward()
-            
-            # 5. Optimization Step (Update weights)
 
             optimizer.step()
-            
-            # Track statistics
+
+           
 
             running_loss += loss.item()
+
             probs = torch.sigmoid(outputs)
+
             preds = (probs > 0.5).float()
+
             correct_preds += (preds == labels).sum().item()
+
             total_preds += labels.size(0)
-            
-            # Update progress bar
+
+           
 
             loop.set_postfix(loss=loss.item())
 
-        # Store epoch metrics
-        
+
+
         train_acc = correct_preds / total_preds
+
         avg_loss = running_loss / len(train_loader)
-        
+
+       
+
         history['train_acc'].append(train_acc)
+
         history['train_loss'].append(avg_loss)
-
-# Validations Of Model
-
-        model.eval()
-        val_correct = 0
-        val_total = 0
-        val_loss = 0.0
         
-        with torch.no_grad():
-            for images, labels in valid_loader:
-                images, labels = images.to(DEVICE), labels.to(DEVICE)
-                labels = labels.unsqueeze(1)
-                outputs = model(images)
-                loss = criterion(outputs, labels)
-                val_loss += loss.item()
-                
-                probs = torch.sigmoid(outputs)
-                preds = (probs > 0.5).float()
-                val_correct += (preds == labels).sum().item()
-                val_total += labels.size(0)
-        
-        val_acc = val_correct / val_total
-        avg_val_loss = val_loss / len(valid_loader)
-        history['val_acc'].append(val_acc)
-        history['val_loss'].append(avg_val_loss)
-        
-        print(f"Epoch {epoch+1}: Train Acc={train_acc:.4f}, Val Acc={val_acc:.4f}")
 
     # Save Model
     torch.save(model.state_dict(), MODEL_SAVE_PATH)

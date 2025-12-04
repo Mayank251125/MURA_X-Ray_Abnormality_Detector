@@ -31,7 +31,7 @@ def load_model():
     # Load weights(Safety Checks)
 
     if not os.path.exists(MODEL_PATH):
-        return None
+       return None
     
     try:
         model.load_state_dict(torch.load(MODEL_PATH, map_location=DEVICE))
