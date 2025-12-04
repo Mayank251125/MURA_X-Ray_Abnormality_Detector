@@ -123,7 +123,7 @@ streamlit run frontend_app.py
 - See confidence scores
 
 - Images:
-![App Screenshot](Images/Screenshot 2.png)
+![App Screenshot](Images/Screenshot_2.png)
   
 
 ## 📊 Output Files
