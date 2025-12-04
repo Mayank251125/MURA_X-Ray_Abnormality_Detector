@@ -1,3 +1,5 @@
+#Importing the tools we use
+
 import os
 import torch
 import torch.nn as nn
@@ -10,18 +12,20 @@ import glob
 import matplotlib.pyplot as plt
 import kagglehub
 
-# ==========================================
+
 # 1. Dataset Download & Configuration
-# ==========================================
+
 print("[Backend] Initializing KaggleHub download...")
 try:
     # Download the dataset files (Images) instead of just the CSV
     # This returns the local path where files were downloaded
+
     dataset_path = kagglehub.dataset_download("cjinny/mura-v11")
     print(f"[Backend] Dataset downloaded to: {dataset_path}")
     
     # The dataset usually extracts to a folder. We need to find 'MURA-v1.1'
     # Check if MURA-v1.1 is inside the download path
+
     possible_dir = os.path.join(dataset_path, "MURA-v1.1")
     if os.path.exists(possible_dir):
         DATA_DIR = possible_dir
@@ -32,8 +36,12 @@ try:
 
 except Exception as e:
     print(f"[Error] Failed to download dataset: {e}")
+
     # Fallback for manual path if download fails
+
     DATA_DIR = "./MURA-v1.1" 
+
+#Configuration and Architecture of the Model
 
 MODEL_SAVE_PATH = "mura_resnet18.pth"
 BATCH_SIZE = 32
@@ -41,18 +49,15 @@ LEARNING_RATE = 0.0001
 NUM_EPOCHS = 5
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-# ==========================================
-# 2. Model Definition
-# ==========================================
 def get_model():
     model = models.resnet18(pretrained=True)
     num_ftrs = model.fc.in_features
     model.fc = nn.Linear(num_ftrs, 1)
     return model
 
-# ==========================================
+
 # 3. Dataset Loader
-# ==========================================
+
 class MuraDataset(Dataset):
     def __init__(self, root_dir, split='train', transform=None):
         self.root_dir = os.path.join(root_dir, split)
@@ -67,11 +72,13 @@ class MuraDataset(Dataset):
             return
 
         # Walk through directory structure: BodyPart -> Patient -> Study
+
         for body_part in os.listdir(self.root_dir):
             body_part_path = os.path.join(self.root_dir, body_part)
             if not os.path.isdir(body_part_path): continue
             
             # Use tqdm here if there are many folders, but standard loop is cleaner for logs
+
             for patient in os.listdir(body_part_path):
                 patient_path = os.path.join(body_part_path, patient)
                 if not os.path.isdir(patient_path): continue
@@ -81,9 +88,11 @@ class MuraDataset(Dataset):
                     if not os.path.isdir(study_path): continue
                     
                     # MURA Logic: 'positive' in folder name = Abnormal (1)
+
                     label = 1 if 'positive' in study else 0
                     
                     # Find images (png, jpg, etc)
+
                     images = glob.glob(os.path.join(study_path, "*.png")) + \
                              glob.glob(os.path.join(study_path, "*.jpg"))
                              
@@ -109,12 +118,17 @@ class MuraDataset(Dataset):
             
         return image, torch.tensor(label, dtype=torch.float32)
 
-# ==========================================
+
 # 4. Training Function
-# ==========================================
+
 def train_model():
     print(f"[Backend] Using device: {DEVICE}")
     
+    # Define transformations for the images
+    # 1. Resize to 224x224 (Standard for ResNet)
+    # 2. Convert to PyTorch Tensor
+    # 3. Normalize using ImageNet statistics
+
     transform = transforms.Compose([
         transforms.Resize((224, 224)),
         transforms.ToTensor(),
@@ -122,12 +136,18 @@ def train_model():
     ])
     
     try:
+        # Initialize Custom Datasets for Training and Validation
+
         train_dataset = MuraDataset(DATA_DIR, split='train', transform=transform)
         valid_dataset = MuraDataset(DATA_DIR, split='valid', transform=transform)
         
+        # Check if data exists
+
         if len(train_dataset) == 0:
             print("[Error] No training data found. Check the download path.")
             return
+
+        # Create DataLoaders to handle batching and shuffling
 
         train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
         valid_loader = DataLoader(valid_dataset, batch_size=BATCH_SIZE, shuffle=False)
@@ -135,47 +155,84 @@ def train_model():
         print(f"[Error] Failed to create DataLoaders: {e}")
         return
 
+    # Load the Model and push to GPU/CPU
+
     model = get_model().to(DEVICE)
+    
+    # Define Loss Function (Binary Cross Entropy for 2 classes)
+
     criterion = nn.BCEWithLogitsLoss()
+    
+    # Define Optimizer (Adam is generally faster/better than SGD for this)
+
     optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
+
+    # Dictionary to store accuracy/loss for plotting later
 
     history = {'train_acc': [], 'val_acc': [], 'train_loss': [], 'val_loss': []}
 
     print(f"\n[Backend] Starting training for {NUM_EPOCHS} epochs...")
     
+    #MAIN TRAINING LOOP 
+
     for epoch in range(NUM_EPOCHS):
-        model.train()
+        model.train() # Set model to training mode (enables Dropouts/BatchNorm)
         running_loss = 0.0
         correct_preds = 0
         total_preds = 0
         
+        # Progress bar for the current epoch
+
         loop = tqdm(train_loader, desc=f"Epoch {epoch+1}/{NUM_EPOCHS} [Train]")
         
         for images, labels in loop:
+            # Move data to the active device (GPU or CPU)
+
             images, labels = images.to(DEVICE), labels.to(DEVICE)
-            labels = labels.unsqueeze(1)
+            labels = labels.unsqueeze(1) # Reshape labels to match output shape
             
+            # 1. Clear previous gradients
+
             optimizer.zero_grad()
+            
+            # 2. Forward Pass (Make prediction)
+
             outputs = model(images)
+            
+            # 3. Calculate Loss (Compare prediction vs truth)
+
             loss = criterion(outputs, labels)
+            
+            # 4. Backward Pass (Calculate gradients)
+
             loss.backward()
+            
+            # 5. Optimization Step (Update weights)
+
             optimizer.step()
             
+            # Track statistics
+
             running_loss += loss.item()
             probs = torch.sigmoid(outputs)
             preds = (probs > 0.5).float()
             correct_preds += (preds == labels).sum().item()
             total_preds += labels.size(0)
             
+            # Update progress bar
+
             loop.set_postfix(loss=loss.item())
 
+        # Store epoch metrics
+        
         train_acc = correct_preds / total_preds
         avg_loss = running_loss / len(train_loader)
         
         history['train_acc'].append(train_acc)
         history['train_loss'].append(avg_loss)
 
-        # Validation
+# Validations Of Model
+
         model.eval()
         val_correct = 0
         val_total = 0

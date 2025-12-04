@@ -1,3 +1,5 @@
+#Importing the tools we use
+
 import streamlit as st
 import torch
 import torch.nn as nn
@@ -5,15 +7,15 @@ from torchvision import models, transforms
 from PIL import Image
 import os
 
-# ==========================================
+
 # Configuration
-# ==========================================
+
 MODEL_PATH = "mura_resnet18.pth"
 DEVICE = torch.device("cpu") # Use CPU for inference on frontend usually
 
-# ==========================================
-# Model Utils (Reused logic)
-# ==========================================
+
+# Loading the Model
+
 @st.cache_resource
 def load_model():
     """
@@ -21,11 +23,13 @@ def load_model():
     Cached to prevent reloading on every interaction.
     """
     # Define structure
+
     model = models.resnet18(pretrained=False) # No need to download imagenet weights
     num_ftrs = model.fc.in_features
     model.fc = nn.Linear(num_ftrs, 1)
     
-    # Load weights
+    # Load weights(Safety Checks)
+
     if not os.path.exists(MODEL_PATH):
         return None
     
@@ -36,7 +40,7 @@ def load_model():
     except Exception as e:
         st.error(f"Error loading model weights: {e}")
         return None
-
+# Processing the Image
 def preprocess_image(image):
     """
     Prepares uploaded image for the model.
@@ -47,12 +51,13 @@ def preprocess_image(image):
         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
     ])
     # Ensure RGB
+
     image = image.convert("RGB")
     return transform(image).unsqueeze(0) # Add batch dimension
 
-# ==========================================
+
 # Streamlit UI
-# ==========================================
+
 st.set_page_config(page_title="MURA X-Ray Classifier", page_icon="🩻")
 
 st.title("🩻 MURA X-Ray Abnormality Detector")
@@ -61,10 +66,12 @@ This tool uses a Deep Learning model (ResNet-18) to classify musculoskeletal X-r
 as **Normal** or **Abnormal**. **Note:** Always try to upload a horizontal images for better Accuracy
 """)
 
-# Sidebar info
+# Sidebar info(Sets the browser tab title and the main header text on the page.)
+
 st.sidebar.header("Status")
 
 # Load Model
+
 model = load_model()
 
 if model is None:
@@ -75,14 +82,17 @@ else:
     st.sidebar.success("Model Loaded")
     
     # File Uploader
+
     uploaded_file = st.file_uploader("Upload an X-Ray Image", type=["png", "jpg", "jpeg"])
 
     if uploaded_file is not None:
         # Display Image
+
         image = Image.open(uploaded_file)
         st.image(image, caption="Uploaded X-Ray", use_column_width=True)
         
         # Predict Button
+
         if st.button("Analyze Image"):
             with st.spinner("Analyzing..."):
                 input_tensor = preprocess_image(image)
@@ -94,6 +104,7 @@ else:
                     confidence = prob if prob > 0.5 else 1 - prob
                 
                 # Display Results
+
                 st.divider()
                 if prediction == "Abnormal":
                     st.error(f"**Prediction: {prediction}**")
