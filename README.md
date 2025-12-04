@@ -102,7 +102,7 @@ python backend_train.py
     ### Model data get Extracted:
    ![Training Results1](Model%20Training%20Images/Screenshot%202025-12-03%20204031.png)
 
-   ### Model Trainig 5 times in set of (32 Images) in each part of 1151 set:
+   ### Model Training 5 times in set of (32 Images) in each part of 1151 set:
 ![Training Results](Model%20Training%20Images/Screenshot%202025-12-03%20204052.png)
 #### Streamlit Access to the browser:
 ![Training Results](Model%20Training%20Images/Screenshot%202025-12-03%20204146.png)
@@ -121,6 +121,10 @@ streamlit run frontend_app.py
 - View predictions
 
 - See confidence scores
+
+- Images:
+![App Screenshot](Images/Screenshot 2.png)
+  
 
 ## 📊 Output Files
 - File	Description
