@@ -99,9 +99,9 @@ python backend_train.py
 
 - Training Images:
     ![Training Results](training_results1.png)
-    (Model Training Images/Screenshot 2025-12-03 204031.png)
-    (Model Training Images/Screenshot 2025-12-03 204052.png)
-    (Model Training Images/Screenshot 2025-12-03 204146.png)
+   ![Training Results1](Model%20Training%20Images/Screenshot%202025-12-03%20204031.png)
+![Training Results](Model%20Training%20Images/Screenshot%202025-12-03%20204052.png)
+![Training Results](Model%20Training%20Images/Screenshot%202025-12-03%20204146.png)
 
 
 ## ▶️ Running the Frontend App
