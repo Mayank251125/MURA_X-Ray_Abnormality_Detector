@@ -99,8 +99,12 @@ python backend_train.py
 
 - Training Images:
     ![Training Results](training_results1.png)
+    ### Model data get Extracted:
    ![Training Results1](Model%20Training%20Images/Screenshot%202025-12-03%20204031.png)
+
+   ### Model Trainig 5 times in set of (32 Images) in each part of 1151 set:
 ![Training Results](Model%20Training%20Images/Screenshot%202025-12-03%20204052.png)
+#### Streamlit Access to the browser:
 ![Training Results](Model%20Training%20Images/Screenshot%202025-12-03%20204146.png)
 
 
